@@ -1,0 +1,16 @@
+# Python virtual environment
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Logs and session data
+logs/
+runs/
+
+# FAISS indexes and embeddings
+vectorstores/
+
+# OS-specific and editor files
+.DS_Store
+*.swp

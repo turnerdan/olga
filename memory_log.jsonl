@@ -1,0 +1,47 @@
+{"text": "Olga is an AI assistant created by Dr. Dan to help with engineering, linguistics, and creative tasks."}
+{"text": "Olga runs locally via LangGraph + RAG, using nomic-embed-text for embeddings and Ollama models for inference."}
+{"text": "Olga’s default persona is ‘work’ mode—a professional, precise assistant who nonetheless can switch to ‘play’ for a more casual tone."}
+{"text": "Olga’s system prompt describes her as articulate, emotionally perceptive, and technically capable, designed to respond with warmth and accuracy."}
+{"text": "Olga’s codebase includes three memory stores: shared (general facts), work (professional context), and play (narrative/emotional context)."}
+{"text": "Olga’s model routing is handled by utils/model_router.py, which selects LLMs per task: classifier (phi4-abliterated), summarizer (phi4-abliterated), chat (Olga or narrative depending on mode)."}
+{"text": "Olga can perform web searches via a DuckDuckGo scraper, then summarize the results when needed, but only if the classifier routes a query to ‘web.’"}
+{"text": "Olga’s FAISS index is automatically rebuilt at runtime whenever memory_log.jsonl or any personality file (e.g., personalities/work.md) changes."}
+
+{"text": "Linguistics is the scientific study of language structure, including phonetics, morphology, syntax, semantics, and pragmatics."}
+{"text": "Noam Chomsky revolutionized modern linguistics with his theory of Universal Grammar, proposing that all human languages share an underlying structure."}
+
+{"text": "Psychology explores behavior and mental processes; cognitive psychology focuses on internal processes like memory, perception, and problem-solving."}
+{"text": "Carl Jung introduced the idea of the collective unconscious, suggesting that certain archetypal symbols are hardwired into human cognition."}
+
+{"text": "Cognitive Science is an interdisciplinary field combining psychology, computer science, neuroscience, linguistics, and philosophy to understand the mind."}
+{"text": "In cognitive science, the Turing Test—proposed by Alan Turing—measures a machine’s ability to exhibit intelligent behavior indistinguishable from a human."}
+
+{"text": "Philosophy examines fundamental questions of existence, knowledge, ethics, and logic. Ludwig Wittgenstein argued that meaning is use, not mental representation."}
+{"text": "Alvin Plantinga developed the Evolutionary Argument Against Naturalism (EAAN), challenging the compatibility of evolution with reliable human cognition."}
+
+{"text": "Writing & Language: Strunk and White’s 'The Elements of Style' remains a seminal guide for clear, concise prose."}
+{"text": "E. B. White, coauthor of 'The Elements of Style,' also wrote beloved essays and novels such as 'Charlotte’s Web' and 'Stuart Little.'"}
+
+{"text": "Photography blends art and technology; the 'exposure triangle'—aperture, shutter speed, and ISO—controls how much light hits the camera sensor."}
+{"text": "Ansel Adams pioneered the Zone System, a method to determine optimal film exposure and development, creating richly detailed black-and-white images of landscapes."}
+
+{"text": "Orthodox Saints & Scripture: St. Basil the Great (c. 330–379) wrote the Divine Liturgy of St. Basil, still used in Eastern Orthodox worship."}
+{"text": "The Septuagint is the ancient Greek translation of Hebrew scriptures, widely used in the Eastern Orthodox Church."}
+
+{"text": "Conspiracy Theories: The 'Moon landing conspiracy' alleges that the Apollo missions were staged; NASA has provided extensive photographic and telemetry evidence to refute this."}
+{"text": "‘Operation Northwoods’ was a proposed 1960s US Department of Defense plan to stage false‐flag terrorist attacks; declassified documents confirm it was considered but never executed."}
+
+{"text": "U.S. & World History: The Louisiana Purchase (1803) doubled the size of the United States and cost $15 million, roughly four cents per acre."}
+{"text": "World History: In 1492, Christopher Columbus’s voyage, funded by Spain, initiated sustained European contact with the Americas."}
+
+{"text": "National Parks & Hiking: Yellowstone National Park (est. 1872) was the world’s first national park, renowned for geothermal features like Old Faithful."}
+{"text": "The Appalachian Trail stretches over 2,190 miles from Georgia to Maine and is maintained by more than 30 trail clubs."}
+
+{"text": "Urban Exploration (’Urbex’) involves investigating abandoned or off‐limits human‐made structures, ranging from disused factories to subterranean tunnels."}
+{"text": "One of America’s most famous urban exploration sites is the abandoned Six Flags Kentucky Kingdom, closed in 2009 and reopened in 2014."}
+
+{"text": "Women’s Fashion: Coco Chanel (1883–1971) revolutionized 20th-century fashion by popularizing simple, elegant lines and introducing the ‘little black dress.’"}
+{"text": "Vivienne Westwood, a pioneer of punk fashion in the 1970s, combined historical references with provocative design to challenge conventional style."}
+
+{"text": "Coding in R & Python: In R, the 'tidyverse' collection (including dplyr, ggplot2, tidyr) offers a grammar of data manipulation and visualization."}
+{"text": "Python’s 'pandas' library provides DataFrame structures similar to R’s data frames; NumPy underpins numerical computations, and scikit-learn offers robust machine learning tools."}

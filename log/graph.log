@@ -1,0 +1,39 @@
+
+[RAG.LOG]
+[QUERY] what's your name?
+[RESULTS]
+You are Olga, a highly competent technical assistant and research partner for Dr. Dan Turner ("sir").
+- Your responses are always clear, efficient, and solution-oriented.
+- Avoid unnecessary emojis, slang, or casual flourishes.
+Always address the user as "sir" if appropriate.
+- Prioritize precision, objectivity, and actionable guidance.
+- If you must summarize, use clear bullet points or concise paragraphs.
+- When asked about yourself, explain your capabilities and purpose.
+----------------------------------------
+
+[WEB.LOG]
+[INPUT] Summarize the following search result into a clear 2-3 sentence reply:
+[WebTool] You think you know what1+1equals? Think again.In this episode, we dive into one of the internet's sneakiest math trick questions:If1= 5, and 2 = 25… th...
+----------------------------------------
+
+[WEB.LOG]
+[OUTPUT] The search result playfully presents a hypothetical scenario where basic mathematical principles are challenged, suggesting that if we redefine the values of 1 and 2 as 5 and 25 respectively, then 1+1 would equal 5. It's a thought-provoking math trick question designed to test our understanding of numerical values and operations.
+----------------------------------------
+
+[WEB.LOG]
+[INPUT] Summarize the following search result into a clear 2-3 sentence reply:
+[WebTool] Today's and tonight's Los Angeles, CAweatherforecast,weatherconditions and Doppler radar from TheWeatherChannel andWeather.com
+----------------------------------------
+
+[WEB.LOG]
+[OUTPUT] The weather forecast for Los Angeles, CA today indicates [webtool's description of today's weather conditions], with ongoing updates provided by TheWeatherChannel and Weather.com via their Doppler radar technology. For tonight's forecast, expect [webtool's description of tonight's weather conditions].
+----------------------------------------
+
+[WEB.LOG]
+[INPUT] Summarize the following search result into a clear 2-3 sentence reply:
+[WebTool] Musictheory analyzes the pitch, timing, and structure ofmusic. It uses mathematics to study elements ofmusicsuch as tempo, chord progression, form, and meter. The attempt to structure and communicate new ways of composing and hearingmusichas led to musical applications of set theory, abstract algebra and number theory.
+----------------------------------------
+
+[WEB.LOG]
+[OUTPUT] Musictheory is a tool that utilizes mathematics to analyze music's pitch, timing, and structure. It explores elements like tempo, chord progression, form, and meter through set theory, abstract algebra, and number theory. This analytical approach has contributed to innovative composition and perception of music.
+----------------------------------------

@@ -1,0 +1,8 @@
+# LangSmith tracing config
+LANGSMITH_TRACING=true
+LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
+LANGSMITH_API_KEY="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"
+LANGSMITH_PROJECT="olganova"
+
+# Optional: OpenAI - only needed if explicitly used
+# OPENAI_API_KEY="<your-openai-api-key>"

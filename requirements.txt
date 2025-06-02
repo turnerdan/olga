@@ -1,0 +1,7 @@
+langchain
+langchain-core
+langchain-community
+ollama
+tqdm
+requests
+beautifulsoup4
