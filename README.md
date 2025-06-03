@@ -1,6 +1,6 @@
 # OLGA: Ontology-Linked Generalized Assistant
 
-**OLGA** is a modular, local-first AI agent framework combining LangGraph state routing with Retrieval-Augmented Generation (RAG) and semantic memory. OLGA supports offline operation, persona-aware responses, and extensible task orchestration — all from your terminal.
+**OLGA** (**Ontology-Linked Generalized Assistant**) is a modular, local-first AI agent framework combining LangGraph state routing with Retrieval-Augmented Generation (RAG) and semantic memory. OLGA supports offline operation, persona-aware responses, and extensible task orchestration — all from your terminal.
 
 ---
 
