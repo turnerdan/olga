@@ -1,47 +1,48 @@
-# OLGA: Local Graph Assistant (LangGraph + RAG)
+# OLGA: Ontology-Linked Generalized Assistant
 
-*OLGA* (**Ontology-Linked Generalized Assistant**),is a local-first AI assistant that combines LangGraph routing, embedded memory search, and flexible persona modes. It runs entirely offline with support for model customization, multimodal extensions, and live CLI interaction.
-
----
-
-## 🌐 Overview
-
-OLGA uses LangGraph to control how inputs are processed — switching dynamically between:
-- **Chat memory recall**
-- **Retrieval-Augmented Generation (RAG)**
-- **Web search + summarization**
-
-Modes (`work`, `play`, `shared`) allow different responses depending on the user's context.
+**OLGA** is a modular, local-first AI agent framework combining LangGraph state routing with Retrieval-Augmented Generation (RAG) and semantic memory. Designed for professionals, analysts, and builders, OLGA supports offline operation, persona-aware responses, and extensible task orchestration — all from your terminal.
 
 ---
 
-## 📁 Directory Structure
+## 🧠 Intelligent Local Agents, Zero Cloud Dependency
+
+OLGA orchestrates intelligent, persona-aware logic using structured flows:
+
+- 🧾 **Embedded Memory Recall** — vectorized markdown memory for grounded responses  
+- 🕸 **Web Fallback** — live web scraping + summarization (via DuckDuckGo)  
+- 🧭 **Dynamic Routing** — classifies user input and selects the best tool  
+- 🪶 **Mode-Aware Output** — output adapts to `work`, `play`, or `shared` memory state  
+- 🔒 **Privacy-First** — 100% offline-capable, no cloud calls required  
+
+---
+
+## 📁 Current Directory Layout
 
 ```
 LangChain_Olga/
-├── app.py                    # Entry point, CLI runner, logging setup
-├── chat.py                   # Conversational memory fallback handler
-├── rag.py                    # RAG logic using vectorized markdown embeddings
-├── langgraph_router.py       # Graph definition, state schema, and runner
-├── routing_classifier.py     # Classifies user prompt into chat, rag, or web
-├── ui_formatter.py           # CLI decoration + response formatting
+├── app.py                  # CLI runner and LangGraph execution
+├── chat.py                 # Chat memory handler
+├── rag.py                  # RAG functions and FAISS logic
+├── langgraph_router.py     # LangGraph state logic and graph compilation
+├── routing_classifier.py   # Query router (chat vs rag vs web)
+├── ui_formatter.py         # Output formatting and CLI presentation
 │
-├── /tools/
-│   ├── responding.py         # Shared tool wrappers (chat, rag, web, combo)
-│   └── web.py                # Simple DuckDuckGo HTML parser
+├── tools/
+│   ├── responding.py       # Tool wrappers for chat, rag, web
+│   └── web.py              # DuckDuckGo HTML search tool
 │
-├── /utils/
-│   └── model_router.py       # Handles model loading and embedding routing
+├── utils/
+│   └── model_router.py     # Model routing + embedding model loader
 │
-├── /personalities/
-│   ├── work.md               # Embedded memory (work context)
-│   ├── play.md               # Embedded memory (play context)
-│   └── shared/               # (planned) universal facts & context
+├── personalities/
+│   ├── work.md             # Embedded persona memory (work mode)
+│   ├── play.md             # Embedded persona memory (play mode)
+│   └── shared/             # (planned) universal facts & context
 │
-├── /faiss_indexes/
-│   └── work/index.faiss      # Vector index for embedded memories
+├── faiss_indexes/
+│   └── work/index.faiss    # FAISS index for memory embeddings
 │
-└── README.md                 # Project documentation
+└── README.md               # You are here
 ```
 
 ---
@@ -49,46 +50,45 @@ LangChain_Olga/
 ## ⚙️ Core Functions
 
 | Function | Description |
-|---------|-------------|
-| `run_graph()` | Builds the LangGraph response pipeline from `langgraph_router.py` |
-| `search_or_respond_tool()` | Routes input to memory (chat), vector search (rag), or `web_search_tool()` |
-| `query_persona_store()` | Runs FAISS similarity search against embedded `.md` persona |
-| `respond_with_chat_memory()` | Generates conversational response from persona files |
-| `format_response()` / `pretty_print()` | Applies CLI output styling depending on mode |
-| `setup_logging()` | Centralized logging system for debug vs normal modes |
-| `validate_environment()` | Ensures FAISS and embedding model are present |
+|----------|-------------|
+| `run_graph()` | Compiles the LangGraph state machine for response execution |
+| `search_or_respond_tool()` | Routes input through memory, retrieval, or search |
+| `query_persona_store()` | Vector search via FAISS for semantic memory |
+| `respond_with_chat_memory()` | Basic conversational fallback (mode-specific) |
+| `format_response()` / `pretty_print()` | Output decoration & CLI beautification |
+| `setup_logging()` | Logging toggle (quiet by default, verbose with `--debug`) |
+| `validate_environment()` | Ensures FAISS index + embedding model are present |
 
 ---
 
 ## 🚀 Usage
 
 ```bash
-./run.sh              # Launch Olga in quiet mode with styled output
+./run.sh              # Launch OLGA in quiet mode with styled output
 ./run.sh --debug      # Enable verbose logging and CLI tracebacks
-./run.sh --bench 5    # Run 5 benchmark prompts via RAG
+./run.sh --bench 5    # Run 5 benchmark prompts using RAG pipeline
 ```
 
 ---
 
-## 📈 Coming Soon
+## 🧪 In Development (Planned Features)
 
 ### 1. `vectorize_and_embed_documents()`
 - Ingests `.docx`, `.pdf`, `.md`
-- Converts content into persona-aligned FAISS vectors
-- Enables assistant-guided Q&A and summarization over private files
+- Converts to vector format for private AI memory querying
+- Will support assisted summarization + live Q&A
 
 ### 2. `pretty_notify()`
-- Optional live system notifications
-- CLI banners, desktop alerts, or speech feedback
-- Used for: task updates, reminders, background job completion
+- Live system feedback (terminal banners, desktop alerts, optional voice)
+- Use cases: job completions, scheduled events, document ingestion status
 
 ### 3. `analyze_and_visualize_data()`
-- Visual summaries (charts, histograms, tables)
-- Inputs: raw text, CSV, JSON
-- Outputs: CLI markdown or Matplotlib visuals
+- Visual summaries from raw data (CSV, JSON, transcripts)
+- CLI plots + Markdown reports
+- Useful for: KPI reporting, assistant diagnostics, memory visualizations
 
 ---
 
 ## 🔖 Version
-**0.6-pre** — Routing, memory, and LangGraph functional. Extensions incoming.
 
+**0.6-pre** — Routing, memory, and LangGraph functional. Assistant extensions underway.
