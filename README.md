@@ -1,6 +1,6 @@
 # OLGA: Local Graph Assistant (LangGraph + RAG)
 
-**OLGA** is a local-first AI assistant that combines LangGraph routing, embedded memory search, and flexible persona modes. It runs entirely offline with support for model customization, multimodal extensions, and live CLI interaction.
+*OLGA* (**Ontology-Linked Generalized Assistant**),is a local-first AI assistant that combines LangGraph routing, embedded memory search, and flexible persona modes. It runs entirely offline with support for model customization, multimodal extensions, and live CLI interaction.
 
 ---
 
