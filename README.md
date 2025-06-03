@@ -1,119 +1,94 @@
-# LangChain OLGA — Developer Guide
+# OLGA: Local Graph Assistant (LangGraph + RAG)
 
-This project powers *OLGA* (**Ontology-Linked Generalized Assistant**), a modular LangChain-based assistant with dynamic memory, RAG-based responses, and structured chat control. It uses LangGraph for state-driven interaction and a custom routing mechanism for persona mode switching.
+**OLGA** is a local-first AI assistant that combines LangGraph routing, embedded memory search, and flexible persona modes. It runs entirely offline with support for model customization, multimodal extensions, and live CLI interaction.
 
 ---
 
-## 🗂️ Project Structure (Updated)
+## 🌐 Overview
+
+OLGA uses LangGraph to control how inputs are processed — switching dynamically between:
+- **Chat memory recall**
+- **Retrieval-Augmented Generation (RAG)**
+- **Web search + summarization**
+
+Modes (`work`, `play`, `shared`) allow different responses depending on the user's context.
+
+---
+
+## 📁 Directory Structure
 
 ```
 LangChain_Olga/
-├── app.py                  # CLI and control loop entry point
-├── rag.py                  # RAG + memory query logic
-├── chat.py                 # Local persona memory response logic
-├── routing_classifier.py   # Classifies input into (mode, tool)
-├── langgraph_router.py     # FSM state graph powered by LangGraph
-├── tools/
-│   └── responding.py       # Tool definitions for LangGraph (chat, web, qa)
-├── faiss_indexes/           # FAISS vector stores for each mode
-├── persona_memory/                 # Persona memory files (work.jsonl, play.jsonl, etc.)
-├── prompts/                # Prompt templates for QA and chat
-├── utils/                  # Model router, ingest, and classifier utils
-└── run.sh                  # Wrapper for launching with debug or bench
+├── app.py                    # Entry point, CLI runner, logging setup
+├── chat.py                   # Conversational memory fallback handler
+├── rag.py                    # RAG logic using vectorized markdown embeddings
+├── langgraph_router.py       # Graph definition, state schema, and runner
+├── routing_classifier.py     # Classifies user prompt into chat, rag, or web
+├── ui_formatter.py           # CLI decoration + response formatting
+│
+├── /tools/
+│   ├── responding.py         # Shared tool wrappers (chat, rag, web, combo)
+│   └── web.py                # Simple DuckDuckGo HTML parser
+│
+├── /utils/
+│   └── model_router.py       # Handles model loading and embedding routing
+│
+├── /personalities/
+│   ├── work.md               # Embedded memory (work context)
+│   ├── play.md               # Embedded memory (play context)
+│   └── shared/               # (planned) universal facts & context
+│
+├── /faiss_indexes/
+│   └── work/index.faiss      # Vector index for embedded memories
+│
+└── README.md                 # Project documentation
 ```
 
 ---
 
-## ⚙️ Key Files & Functions
+## ⚙️ Core Functions
 
-### `app.py`
-- Entrypoint, parses CLI args and launches `rag` or `run_graph()`.
-- CLI flags:
-  - `--debug`: enables verbose logging
-  - `--bench`: runs benchmark mode instead of interactive
-
-### `rag.py`
-- `query_memory(query, mode)`: Uses FAISS vector search
-- `embed_personas()`: Embeds persona memory into `faiss_indexes/`
-- `query_persona_store(query, mode)`: Wraps memory query and prompt handling
-- Uses `nomic-embed-text` for fast embeddings.
-
-### `chat.py`
-- `respond_with_chat_memory(prompt, mode)`: Generates contextual memory-aware chat response.
-
-### `routing_classifier.py`
-- `classify_mode_and_tool(prompt)`: Routes input into:
-  - Mode: `"work"` or `"play"`
-  - Tool: `"chat"`, `"web"`, `"rag"` — JSON5-encoded output
-- Falls back on defaults for unparseable results.
-
-### `langgraph_router.py`
-- FSM graph defined with `OlgaState` TypedDict:
-  ```python
-  class OlgaState(TypedDict):
-      prompt: str
-      mode: str
-      honorific: str
-      result: str
-  ```
-- Uses `RunnableLambda` and `json5` for relaxed JSON validation.
-- Entry and exit are both the `respond` node wrapping `search_or_respond_tool`.
-
-### `tools/responding.py`
-- Defines LangChain-compatible tools:
-  - `search_or_respond_tool`: Routes based on intent and mode
-  - `chat_response_tool`: Responds with memory
-  - `qa_tool`: Executes structured RAG-style QA
-  - `web_tool`: Uses summarizer for external web content
+| Function | Description |
+|---------|-------------|
+| `run_graph()` | Builds the LangGraph response pipeline from `langgraph_router.py` |
+| `search_or_respond_tool()` | Routes input to memory (chat), vector search (rag), or `web_search_tool()` |
+| `query_persona_store()` | Runs FAISS similarity search against embedded `.md` persona |
+| `respond_with_chat_memory()` | Generates conversational response from persona files |
+| `format_response()` / `pretty_print()` | Applies CLI output styling depending on mode |
+| `setup_logging()` | Centralized logging system for debug vs normal modes |
+| `validate_environment()` | Ensures FAISS and embedding model are present |
 
 ---
 
-## 🧠 Memory & Persona Modes
+## 🚀 Usage
 
-- Stored in `persona_memory/` as `.jsonl` (e.g. `work.jsonl`, `play.jsonl`)
-- Two persona modes:
-  - **Work**: Technical, structured, professional
-  - **Play**: Expressive, casual, emotional
-- "Shared" memory for long-term factual recall
-- Each mode has its own FAISS vector index in `faiss_indexes/` (e.g. `faiss_indexes/work/`)
-
----
-
-## 🌐 Intent Classification and Routing
-
-- Calls a local utility LLM with a structured prompt.
-- Expects output in JSON5:
-  ```json5
-  {
-    "mode": "work",
-    "tool": "chat"
-  }
-  ```
-- Handles invalid responses gracefully with fallback to `"work"` and `"chat"`.
+```bash
+./run.sh              # Launch Olga in quiet mode with styled output
+./run.sh --debug      # Enable verbose logging and CLI tracebacks
+./run.sh --bench 5    # Run 5 benchmark prompts via RAG
+```
 
 ---
 
-## 🧪 Benchmarking (WIP)
+## 📈 Coming Soon
 
-- `--bench` mode runs structured test cases from a batch file (markdown or JSON)
-- Logs stored in `logs/benchmark_results/`
-- Chat transcripts stored in `logs/chat_sessions/`
-- Emoji logging indicators: ✅ success, ❌ failure
+### 1. `vectorize_and_embed_documents()`
+- Ingests `.docx`, `.pdf`, `.md`
+- Converts content into persona-aligned FAISS vectors
+- Enables assistant-guided Q&A and summarization over private files
+
+### 2. `pretty_notify()`
+- Optional live system notifications
+- CLI banners, desktop alerts, or speech feedback
+- Used for: task updates, reminders, background job completion
+
+### 3. `analyze_and_visualize_data()`
+- Visual summaries (charts, histograms, tables)
+- Inputs: raw text, CSV, JSON
+- Outputs: CLI markdown or Matplotlib visuals
 
 ---
 
-## 🔍 Debug Mode
-
-- `--debug` shows routing, model selection, prompt payloads, and tool responses.
-- Memory embedding is rebuilt on file change.
-- Logger outputs are color-coded for clarity.
-
-
----
-
-## 🧹 Notes
-
-- All models run locally (Ollama integration)
-- Routing is done via `model_router.py`
-- No external API calls are required unless configured in `web_tool`
+## 🔖 Version
+**0.6-pre** — Routing, memory, and LangGraph functional. Extensions incoming.
 
