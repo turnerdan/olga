@@ -11,7 +11,7 @@ def basic_web_search(query: str) -> str:
         )
 
         if response.status_code != 200:
-            return "Hmm... I couldn't reach the search engine. Try again later, sir."
+            return "Hmm... I couldn't reach the search engine. Try again later."
 
         soup = BeautifulSoup(response.text, "html.parser")
         results = soup.select("div.BNeawe.vvjwJb.AP7Wnd")
@@ -21,9 +21,9 @@ def basic_web_search(query: str) -> str:
         for title, snippet in zip(results[:3], snippets[:3]):
             output.append(f"{title.text.strip()}: {snippet.text.strip()}")
 
-        return "\n\n".join(output) if output else "I searched everywhere but found nothing relevant, sir..."
+        return "\n\n".join(output) if output else "I searched everywhere but found nothing relevant."
     
     except requests.exceptions.Timeout:
-        return "It seems the request is taking too long... maybe the net is down, sir."
+        return "It seems the request is taking too long... maybe the network is down."
     except requests.exceptions.RequestException as e:
-        return f"I'm sorry sir, but I don’t think we're connected to the internet right now… ({e})"
+        return f"I'm sorry, but I don’t think we're connected to the internet right now… ({e})"

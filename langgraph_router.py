@@ -21,18 +21,25 @@ def classify_node(state: dict) -> dict:
     return state
 
 def search_or_respond_node(state: dict) -> dict:
+    import memory  # to fetch dynamic honorific
     query = state["user_input"]
     tool = state.get("tool", "memory")
     mode = state.get("persona_mode", "work")
-
+    honorific = ""  # default empty; integrate memory when available
+    try:
+        honorific = memory.preferred_address
+    except:
+        honorific = ""
     if tool == "web":
-        result = query_web(query)
-        summary = summarize_web_results(result)
+        web_text = query_web(query)
+        summary = summarize_web_results(web_text, mode=mode, honorific=honorific)
         state["result"] = summary
         return state
-    result = query_persona_store(query, mode=mode)
+    result = query_persona_store(query, mode=mode, honorific=honorific)
     state["result"] = result
     return state
+
+
 def generate_response_node(state: dict) -> dict:
     mode = state.get("persona_mode", "work")
     chat_model = get_model("chat", mode=mode)
