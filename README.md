@@ -108,12 +108,6 @@ LangChain_Olga/
 - Memory embedding is rebuilt on file change.
 - Logger outputs are color-coded for clarity.
 
----
-
-## 🪄 Honorific Control
-
-- `honorific` (e.g., `"sir"`, `"friend"`, `"user"`) is passed optionally
-- Used in prompt templates but not required for logic to function
 
 ---
 
