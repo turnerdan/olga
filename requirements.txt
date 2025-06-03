@@ -5,3 +5,4 @@ ollama
 tqdm
 requests
 beautifulsoup4
+json5

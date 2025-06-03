@@ -42,3 +42,17 @@ class RollingMemory:
 
 
 memory = RollingMemory(max_len=99)
+
+
+def get_fragments(mode: str):
+    import os, json
+    path = f"persona_memory/{mode}.jsonl"
+    fragments = []
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                try:
+                    fragments.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    return fragments

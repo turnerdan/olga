@@ -1,58 +1,82 @@
+import logging
+from pathlib import Path
 from datetime import datetime
-import time
-import uuid
-
 import sys
-import os
-from memory.embedding import embed_personas
-from langgraph_router import app as langgraph_app
+import argparse
 
-DEBUG = "--debug" in sys.argv
+from utils.model_router import get_embeddings_model
 
-def debug_print(message):
-    if DEBUG:
-        print(message)
+def setup_logging(debug=False):
+    log_dir = Path("logs/app")
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"session_{datetime.now().strftime('%Y-%m-%dT%H-%M-%S')}.log"
 
-# Ensure runs and logs directories exist
-os.makedirs("runs/chat", exist_ok=True)
-os.makedirs("runs/batch", exist_ok=True)
-os.makedirs("log", exist_ok=True)
+    handlers = [logging.FileHandler(log_path, mode="w")]
+    if debug:
+        handlers.append(logging.StreamHandler(sys.stdout))
+
+    logging.basicConfig(
+        level=logging.DEBUG if debug else logging.INFO,
+        format="[{asctime}] {levelname}: {message}",
+        style="{",
+        handlers=handlers
+    )
+
+    logging.info("🔧 Logging initialized (debug=%s)", debug)
+    logging.debug("🌀 Entered Olga CLI control flow")
+
+def validate_environment():
+    logging.debug("✅ Environment validation completed")
+    store_path = Path("faiss_indexes/work/index.faiss")
+    if not store_path.exists():
+        logging.error("🛑 FAISS index not found at %s", store_path)
+        sys.exit(1)
+    try:
+        _ = get_embeddings_model()
+    except Exception as e:
+        logging.error("🛑 Failed to load embedding model: %s", str(e))
+        sys.exit(1)
 
 def main():
-    print("Olga ready: LangChain Assistant (LangGraph + RAG) ready.")
-    print("🔧 Initializing persona memory...")
-    from utils.auto_embed import check_and_rebuild
-    check_and_rebuild("work")
-    embed_personas(startup_mode="work")
-    print("🧠✅ Persona memory embedding complete.")
-    print("🌀 Awaiting user input...")
+    logging.debug("🚀 Inside main() execution body")
+    logging.info("🚀 Starting Olga main loop...")
+
+    from langgraph_router import run_graph
+    app = run_graph()
 
     while True:
-        user_input = input("You: ")
-        if user_input.strip().lower() == "exit":
-            print("👋 Session ended. See you soon.")
+        user_input = input("You: ").strip()
+        if not user_input or user_input.lower() in {"exit", "quit"}:
+            print("Olga: 👋 Goodbye, sir.")
             break
 
-        debug_print(f"📥 INPUT: {user_input}")
         state = {
-    "user_input": user_input,
-    "persona_mode": "work",
-    "tool": None,
-    "result": None,
-    "messages": [],
-    "timestamp": datetime.now().isoformat(),
-    "id": str(uuid.uuid4())
-}
-        from utils.auto_embed import check_and_rebuild
-        check_and_rebuild("work")
-        start_time = time.time()
-        result = langgraph_app.invoke(state)
-        elapsed = time.time() - start_time
-        debug_print(f"⏱ Latency: {elapsed:.2f}s")
-        output = result.get("result")
+            "prompt": user_input,
+            "mode": "work"
+        }
+        logging.debug(f"[🔁] Invoking LangGraph with: {state}")
+        result = app.invoke(state)
 
-        debug_print(f"📤 OUTPUT: {output}")
-        print("Olga:", output)
+        if isinstance(result, dict) and "result" in result:
+            print(f"Olga: {result['result']}")
+        else:
+            print(f"Olga: {result}")
 
 if __name__ == "__main__":
-    main()
+    print("🧭 Starting __main__ block in app.py")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--debug", action="store_true", help="Enable verbose console output.")
+    parser.add_argument("--bench", type=int, help="Run N benchmark prompts, e.g., --bench 5")
+    args = parser.parse_args()
+
+    print(f"⚙️ Parsed args: debug={args.debug}, bench={args.bench}")
+
+    setup_logging(debug=args.debug)
+    validate_environment()
+
+    if args.bench:
+        from rag import run_bench_subset
+        run_bench_subset(args.bench)
+    else:
+        main()

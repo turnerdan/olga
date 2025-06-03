@@ -1,40 +1,34 @@
-from langchain_ollama import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
-from utils.model_router import get_model
+import json5
+import logging
+from utils.model_router import get_classifier_model  # Updated to match task-specific naming
 
-# Choose your utility LLM for classification
-utility_llm = get_model("classifier")
+logger = logging.getLogger(__name__)
 
-def classify_mode_and_tool(text: str) -> tuple[str, str]:
-    # Pre-check for identity queries to force memory
-    lowered = text.strip().lower()
-    if any(kw in lowered for kw in ["what is your name", "who are you", "what’s your name", "your name is", "name"]):
-        return "work", "memory"
-    
-    """
-    Use an LLM to classify user input into a persona mode and an appropriate tool.
-    Returns: (mode, tool)
-    """
-    prompt = f"""
-You are a routing classifier for an AI assistant with multiple response modes and tools.
+def classify_mode_and_tool(prompt: str) -> dict:
+    """Classify input into {mode, tool} using the classifier model."""
+    classifier = get_classifier_model()
+    system_prompt = """You are a classifier that routes user input to a mode and tool.
 
-Classify the following user input into:
-- If the user asks the assistant about its own identity (e.g., "what is your name"), set tool to 'memory'
+Modes:
+- "work": task-oriented, professional, analytical
+- "play": expressive, emotional, casual
 
-- a "persona mode": either 'work' or 'play'
-- a "tool": either 'web' or 'memory'
-...
-Output:"""
+Tools:
+- "chat": default conversation and memory responses
+- "rag": question-answering from documents
+- "web": queries involving external information or search
 
-    result = utility_llm.invoke(prompt)
-    raw = result.content.strip().lower()
+Respond ONLY with a JSON5 object like:
+{ mode: "play", tool: "chat" }
 
-    # Fallback in case of malformed output
+Do not explain.
+"""
+
+    full_prompt = f"{system_prompt}\n\nUser input:\n{prompt}"
+    result = classifier.invoke(full_prompt)
+
     try:
-        mode, tool = [x.strip() for x in raw.split(",")]
-        assert mode in {"work", "play"}
-        assert tool in {"web", "memory"}
-    except Exception:
-        mode, tool = "work", "web"  # safe default fallback
-
-    return mode, tool
+        return json5.loads(result.content)
+    except Exception as e:
+        logger.warning(f"Classifier failed to produce valid JSON5. Response:\n{result.content}")
+        return {"mode": "work", "tool": "chat"}  # safe default

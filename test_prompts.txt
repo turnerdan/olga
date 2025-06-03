@@ -1,0 +1,10 @@
+What is intonation?
+How does emotion affect speech prosody?
+Define the term 'pitch accent'.
+Explain phrase-final lengthening.
+What role does rhythm play in speech?
+Can intonation convey sarcasm?
+Describe ToBI annotation.
+What is the difference between stress and emphasis?
+How do listeners interpret rising tones?
+How does intonation interact with syntax?
